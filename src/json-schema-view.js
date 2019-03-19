@@ -311,7 +311,7 @@ export default class JSONSchemaView {
     }
 
     if (this.isArray) {
-      const view = new JSONSchemaView(this.schema.items, this.open - 1, this.options)
+      const view = new JSONSchemaView(this.schema.items || {}, this.open - 1, this.options)
       inner.appendChild(view.render());
     }
 
