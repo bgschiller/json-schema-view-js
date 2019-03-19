@@ -1,11 +1,9 @@
 #json-schema-view-js {
   .theme(@text-color: #000, @bold-color: #333, @required-color: #F00, @blue: blue, @green: green,
   @indent: 18px, @font-size: 14px) {
-
     font-family: monospace;
     font-size: 0;
     display: table-cell;
-
 
     > * {
       font-size: @font-size;
@@ -13,7 +11,7 @@
 
     .toggle-handle {
       cursor: pointer;
-      margin: auto .3em;
+      margin: auto 0.3em;
       font-size: 10px;
       display: inline-block;
       transform-origin: 50% 40%;
@@ -23,7 +21,8 @@
         content: "▼";
       }
 
-      &, &:hover {
+      &,
+      &:hover {
         text-decoration: none;
         color: @bold-color;
       }
@@ -37,13 +36,16 @@
     .title {
       font-weight: bold;
       cursor: pointer;
-      &, &:hover {
+      &,
+      &:hover {
         text-decoration: none;
         color: @bold-color;
       }
     }
 
-    .title, .brace, .bracket {
+    .title,
+    .brace,
+    .bracket {
       color: @bold-color;
     }
 
@@ -53,9 +55,8 @@
 
       > * {
         font-size: @font-size;
-        padding: .2em;
+        padding: 0.2em;
       }
-
     }
 
     .name {
@@ -76,8 +77,10 @@
       color: @required-color;
     }
 
-    .format, .enums, .pattern {
-      color: @text-color
+    .format,
+    .enums,
+    .pattern {
+      color: @text-color;
     }
 
     .inner {
@@ -101,11 +104,19 @@
   }
 }
 
-.json-schema-view, json-schema-view {
+.json-schema-view,
+json-schema-view {
   #json-schema-view-js > .theme();
 }
 
 .json-schema-view.json-schema-view-dark,
 json-schema-view[json-schema-view-dark] {
-  #json-schema-view-js > .theme(@text-color: #fff, @bold-color: #eee, @required-color: #fe0000, @blue: lightblue, @green: lightgreen);
+  #json-schema-view-js >
+    .theme(
+      @text-color: #fff,
+      @bold-color: #eee,
+      @required-color: #fe0000,
+      @blue: lightblue,
+      @green: lightgreen
+    );
 }
