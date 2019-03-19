@@ -3,7 +3,8 @@
 import JSONFormatter from 'json-formatter-js';
 import {
   convertXOf,
-  _if
+  _if,
+  forEachProperty,
 } from './helpers.js';
 
 /**
@@ -23,7 +24,7 @@ export default class JSONSchemaView {
    *  theme {string}: one of the following options: ['dark']
   */
   constructor(schema, open, options = {theme: null}) {
-    this.schema = schema;
+    this.schema = JSON.parse(JSON.stringify(schema));
     this.open = open;
     this.options = options;
     this.isCollapsed = open <= 0;
@@ -65,10 +66,9 @@ export default class JSONSchemaView {
 
     // populate isRequired property down to properties
     if (this.schema && Array.isArray(this.schema.required)) {
-      this.schema.required.forEach(requiredProperty => {
-        if (typeof this.schema.properties[requiredProperty] === 'object') {
-          this.schema.properties[requiredProperty].isRequired = true;
-        }
+      forEachProperty(this.schema, (property, name) => {
+        if (!this.schema.required.includes(name) || typeof property !== 'object') return;
+        property.isRequired = true;
       });
     }
   }

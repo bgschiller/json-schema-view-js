@@ -27,3 +27,19 @@ function normal (template, ...expressions) {
     return accumulator + expressions[i] + part;
   }, template[0]);
 }
+
+export function forEachProperty(schema, func) {
+  const applyOnSchema = s => forEachProperty(s, func);
+  if (schema.anyOf) {
+    schema.anyOf.forEach(applyOnSchema);
+  }
+  if (schema.allOf) {
+    schema.allOf.forEach(applyOnSchema);
+  }
+  if (schema.oneOf) {
+    schema.oneOf.forEach(applyOnSchema);
+  }
+  if (schema.properties) {
+    Object.keys(schema.properties).forEach(k => func(schema.properties[k], k));
+  }
+}
