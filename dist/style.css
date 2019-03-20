@@ -93,6 +93,14 @@ json-schema-view .pattern {
 json-schema-view .inner {
   padding-left: 18px;
 }
+.json-schema-view .tuple-entry > *,
+json-schema-view .tuple-entry > * {
+  display: inline-block;
+}
+.json-schema-view .tuple-index,
+json-schema-view .tuple-index {
+  padding-right: 10px;
+}
 .json-schema-view.collapsed .description,
 json-schema-view.collapsed .description {
   display: none;
@@ -203,6 +211,14 @@ json-schema-view[json-schema-view-dark] .pattern {
 .json-schema-view.json-schema-view-dark .inner,
 json-schema-view[json-schema-view-dark] .inner {
   padding-left: 18px;
+}
+.json-schema-view.json-schema-view-dark .tuple-entry > *,
+json-schema-view[json-schema-view-dark] .tuple-entry > * {
+  display: inline-block;
+}
+.json-schema-view.json-schema-view-dark .tuple-index,
+json-schema-view[json-schema-view-dark] .tuple-index {
+  padding-right: 10px;
 }
 .json-schema-view.json-schema-view-dark.collapsed .description,
 json-schema-view[json-schema-view-dark].collapsed .description {

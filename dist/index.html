@@ -434,7 +434,55 @@ document.body.appendChild(view.render());</pre>
               }
             ]
           }
-        }
+        },
+
+        {
+          title: 'Coordinate Pair',
+          schema: {
+            description: "A coordinate pair",
+            type: "array",
+            minItems: 2,
+            items: [
+              {
+                type: "number"
+              },
+              {
+                type: "number"
+              }
+            ],
+            additionalItems: false
+          }
+        },
+
+        {
+          title: 'Double Tuple all the way across the sky',
+          schema: {
+            description: "A coordinate pair",
+            type: "array",
+            minItems: 2,
+            items: [
+              {
+                type: "number"
+              },
+              {
+                description: "A coordinate pair",
+                type: "array",
+                minItems: 2,
+                items: [
+                  {
+                    type: "number"
+                  },
+                  {
+                    type: "number"
+                  }
+                ],
+                additionalItems: false
+              }
+            ],
+            additionalItems: false
+          }
+        },
+
       ];
 
       var results = document.querySelector('.results');

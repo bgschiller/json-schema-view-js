@@ -29,7 +29,7 @@ export default class JSONSchemaView {
     this.options = options;
     this.isCollapsed = open <= 0;
 
-    // if schema is an empty object which means any JOSN
+    // if schema is an empty object which means any JSON
     this.isAny = typeof schema === 'object' &&
       !Array.isArray(schema) &&
       !Object.keys(schema)
@@ -37,6 +37,8 @@ export default class JSONSchemaView {
 
     // Determine if a schema is an array
     this.isArray = !this.isAny && this.schema && this.schema.type === 'array';
+
+    this.isTuple = this.isArray && Array.isArray(this.schema.items);
 
     this.isObject = this.schema &&
       (this.schema.type === 'object' ||
@@ -70,6 +72,16 @@ export default class JSONSchemaView {
         if (!this.schema.required.includes(name) || typeof property !== 'object') return;
         property.isRequired = true;
       });
+    }
+
+    // When schema represents an array, items is a list, and additionalItems is false,
+    // set maxItems to the length of the items list.
+    if (
+      this.isTuple &&
+      this.schema.additionalItems === false &&
+      !("maxItems" in this.schema)
+    ) {
+      this.schema.maxItems = this.schema.items.length;
     }
   }
 
@@ -310,7 +322,24 @@ export default class JSONSchemaView {
 
     }
 
-    if (this.isArray) {
+    if (this.isTuple) {
+      const tupleContainer = document.createElement('div');
+      tupleContainer.classList.add('tuple');
+      this.schema.items
+        .map(item => new JSONSchemaView(item, this.open - 1, this.options))
+        .forEach((s, ix) => {
+          const inner = document.createElement('div');
+          inner.classList.add('inner');
+          inner.classList.add('tuple-entry');
+          const index = document.createElement('span');
+          index.classList.add('tuple-index');
+          index.innerText = (ix + ':');
+          inner.appendChild(index);
+          inner.appendChild(s.render());
+          tupleContainer.appendChild(inner)
+        });
+      inner.appendChild(tupleContainer);
+    } else if (this.isArray) {
       const view = new JSONSchemaView(this.schema.items || {}, this.open - 1, this.options)
       inner.appendChild(view.render());
     }
@@ -325,15 +354,11 @@ export default class JSONSchemaView {
         const view = new JSONSchemaView(property, this.open - 1, this.options);
         tempDiv.querySelector('.property').appendChild(view.render());
 
-        inner.appendChild(tempDiv.querySelector('.property'));
+         inner.appendChild(tempDiv.querySelector('.property'));
       });
     }
 
-    if (this.schema.allOf) { appendXOf.call(this, 'allOf'); }
-    if (this.schema.oneOf) { appendXOf.call(this, 'oneOf'); }
-    if (this.schema.anyOf) { appendXOf.call(this, 'anyOf'); }
-
-    function appendXOf(type) {
+    const appendXOf = (type) => {
       const innerAllOf = element.querySelector(`.inner.${type}`);
 
       this.schema[type].forEach(schema => {
@@ -344,5 +369,10 @@ export default class JSONSchemaView {
         innerAllOf.appendChild(inner);
       });
     }
+    if (this.schema.allOf) { appendXOf('allOf'); }
+    if (this.schema.oneOf) { appendXOf('oneOf'); }
+    if (this.schema.anyOf) { appendXOf('anyOf'); }
+
+
   }
 }
