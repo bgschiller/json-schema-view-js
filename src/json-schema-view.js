@@ -5,6 +5,7 @@ import {
   convertXOf,
   _if,
   forEachProperty,
+  liftAllOf,
 } from './helpers.js';
 
 /**
@@ -24,7 +25,7 @@ export default class JSONSchemaView {
    *  theme {string}: one of the following options: ['dark']
   */
   constructor(schema, open, options = {theme: null}) {
-    this.schema = JSON.parse(JSON.stringify(schema));
+    this.schema = liftAllOf(JSON.parse(JSON.stringify(schema)));
     this.open = open;
     this.options = options;
     this.isCollapsed = open <= 0;
@@ -82,6 +83,18 @@ export default class JSONSchemaView {
       !("maxItems" in this.schema)
     ) {
       this.schema.maxItems = this.schema.items.length;
+    }
+
+    // try and guess the type, if it's primitive and all the same
+    if (this.schema.enum && !this.schema.type) {
+      const allNum = this.schema.enum.every(v => typeof v === 'number');
+      const allStr = this.schema.enum.every(v => typeof v === 'string');
+      if (allNum) {
+        this.schema.type = 'number';
+      }
+      if (allStr) {
+        this.schema.type = 'string';
+      }
     }
   }
 

@@ -93,9 +93,9 @@ json-schema-view .pattern {
 json-schema-view .inner {
   padding-left: 18px;
 }
-.json-schema-view .tuple-entry > *,
-json-schema-view .tuple-entry > * {
-  display: inline-block;
+.json-schema-view .tuple-entry,
+json-schema-view .tuple-entry {
+  display: flex;
 }
 .json-schema-view .tuple-index,
 json-schema-view .tuple-index {
@@ -212,9 +212,9 @@ json-schema-view[json-schema-view-dark] .pattern {
 json-schema-view[json-schema-view-dark] .inner {
   padding-left: 18px;
 }
-.json-schema-view.json-schema-view-dark .tuple-entry > *,
-json-schema-view[json-schema-view-dark] .tuple-entry > * {
-  display: inline-block;
+.json-schema-view.json-schema-view-dark .tuple-entry,
+json-schema-view[json-schema-view-dark] .tuple-entry {
+  display: flex;
 }
 .json-schema-view.json-schema-view-dark .tuple-index,
 json-schema-view[json-schema-view-dark] .tuple-index {

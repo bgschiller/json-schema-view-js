@@ -43,3 +43,14 @@ export function forEachProperty(schema, func) {
     Object.keys(schema.properties).forEach(k => func(schema.properties[k], k));
   }
 }
+
+// MERGEABLE_PROPS = ['minItems', 'maxItems'];
+export function liftAllOf(schema) {
+  if (!schema.allOf) return schema;
+  const merged = Object.assign({}, ...schema.allOf);
+  const noConflicts = schema.allOf.every(s => Object.keys(s).every(k => !(k in s) || s[k] === merged[k]));
+  if (!noConflicts) return schema;
+  const newSchema = Object.assign({}, merged, schema);
+  delete newSchema.allOf;
+  return newSchema;
+}

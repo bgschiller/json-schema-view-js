@@ -483,6 +483,19 @@ document.body.appendChild(view.render());</pre>
           }
         },
 
+        {
+          title: 'type-less enum',
+          schema: {
+              "title": "Polygon",
+              "properties": {
+                "type": {
+                  "enum": [
+                    "Polygon"
+                  ]
+                },
+          }
+        },
+        }
       ];
 
       var results = document.querySelector('.results');

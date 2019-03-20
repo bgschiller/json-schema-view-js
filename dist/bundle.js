@@ -161,7 +161,7 @@ var JSONSchemaView = function () {
 
     _classCallCheck(this, JSONSchemaView);
 
-    this.schema = JSON.parse(JSON.stringify(schema));
+    this.schema = Object(__WEBPACK_IMPORTED_MODULE_1__helpers_js__["d" /* liftAllOf */])(JSON.parse(JSON.stringify(schema)));
     this.open = open;
     this.options = options;
     this.isCollapsed = open <= 0;
@@ -196,6 +196,22 @@ var JSONSchemaView = function () {
     // set maxItems to the length of the items list.
     if (this.isTuple && this.schema.additionalItems === false && !("maxItems" in this.schema)) {
       this.schema.maxItems = this.schema.items.length;
+    }
+
+    // try and guess the type, if it's primitive and all the same
+    if (this.schema.enum && !this.schema.type) {
+      var allNum = this.schema.enum.every(function (v) {
+        return typeof v === 'number';
+      });
+      var allStr = this.schema.enum.every(function (v) {
+        return typeof v === 'string';
+      });
+      if (allNum) {
+        this.schema.type = 'number';
+      }
+      if (allStr) {
+        this.schema.type = 'string';
+      }
     }
   }
 
@@ -800,10 +816,13 @@ module.exports = function(modules) {
 /* harmony export (immutable) */ __webpack_exports__["b"] = convertXOf;
 /* harmony export (immutable) */ __webpack_exports__["a"] = _if;
 /* harmony export (immutable) */ __webpack_exports__["c"] = forEachProperty;
+/* harmony export (immutable) */ __webpack_exports__["d"] = liftAllOf;
 
 /*
  * Converts anyOf, allOf and oneOf to human readable string
 */
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 function convertXOf(type) {
   return type.substring(0, 3) + ' of';
@@ -853,6 +872,21 @@ function forEachProperty(schema, func) {
       return func(schema.properties[k], k);
     });
   }
+}
+
+// MERGEABLE_PROPS = ['minItems', 'maxItems'];
+function liftAllOf(schema) {
+  if (!schema.allOf) return schema;
+  var merged = Object.assign.apply(Object, [{}].concat(_toConsumableArray(schema.allOf)));
+  var noConflicts = schema.allOf.every(function (s) {
+    return Object.keys(s).every(function (k) {
+      return !(k in s) || s[k] === merged[k];
+    });
+  });
+  if (!noConflicts) return schema;
+  var newSchema = Object.assign({}, merged, schema);
+  delete newSchema.allOf;
+  return newSchema;
 }
 
 /***/ }),
